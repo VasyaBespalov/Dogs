@@ -25,10 +25,14 @@ def show_image():
             response.raise_for_status()  # Получаем статус ответа, пригодится для обработки исключений
             img_data = BytesIO(response.content)  # Теперь по этой ссылке с помощью BytesIO загрузили изображение в двоичном коде
             img = Image.open(img_data)  # С помощью PIL обрабатываем. Теперь здесь картинка
-            img.thumbnail((300, 300))  # Загруженная картинка будет подогнана под размер 300x300
+            img_size = (int(width_spinbox.get()), int(height_spinbox.get()))  # В переменную получаем значения из спинбоксов
+            img.thumbnail(img_size)  # Загруженная картинка будет подогнана под размер 300x300
             img = ImageTk.PhotoImage(img)  #
-            label.config(image=img)
-            label.image = img  # Чтобы картинку сборщик мусора не собрал
+            new_window = Toplevel(window)    # Теперь выводим все не в метку, а в отдельное окно топлевел
+            new_window.title("Случайное изображение")
+            lb = ttk.Label(new_window, image=img)
+            lb.pack()
+            lb.image = img  # Чтобы картинку сборщик мусора не собрал
         except Exception as e:
             mb.showerror("Ошибка", f"Возникла ошибка при загрузке изображения {e}")
     progress.stop()
@@ -54,5 +58,16 @@ button.pack(pady=10)
 
 progress = ttk.Progressbar(mode="determinate", length=300)
 progress.pack(pady=10)
+
+width_label = ttk.Label(text='Ширина:')
+width_label.pack(side='left', padx=(10, 0))
+width_spinbox = ttk.Spinbox(from_=200, to=500, increment=50, width=5)
+width_spinbox.pack(side='left', padx=(0, 10))
+
+height_label = ttk.Label(text='Высота:')
+height_label.pack(side='left', padx=(10, 0))
+height_spinbox = ttk.Spinbox(from_=200, to=500, increment=50, width=5)
+height_spinbox.pack(side='left', padx=(0, 10))
+
 
 window.mainloop()
