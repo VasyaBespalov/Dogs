@@ -28,10 +28,10 @@ def show_image():
             img_size = (int(width_spinbox.get()), int(height_spinbox.get()))  # В переменную получаем значения из спинбоксов
             img.thumbnail(img_size)  # Загруженная картинка будет подогнана под размер 300x300
             img = ImageTk.PhotoImage(img)  #
-            new_window = Toplevel(window)    # Теперь выводим все не в метку, а в отдельное окно топлевел
-            new_window.title("Случайное изображение")
-            lb = ttk.Label(new_window, image=img)
-            lb.pack()
+            tab = ttk.Frame(notebook)  # Создается закладка с изображением notebook
+            notebook.add(tab, text=f"Изображение № {notebook.index('end') + 1}")
+            lb = ttk.Label(tab, image=img)  # Отправляем на закладку
+            lb.pack(padx=10, pady=10)
             lb.image = img  # Чтобы картинку сборщик мусора не собрал
         except Exception as e:
             mb.showerror("Ошибка", f"Возникла ошибка при загрузке изображения {e}")
@@ -69,5 +69,10 @@ height_label.pack(side='left', padx=(10, 0))
 height_spinbox = ttk.Spinbox(from_=200, to=500, increment=50, width=5)
 height_spinbox.pack(side='left', padx=(0, 10))
 
+top_level_window = Toplevel(window)
+top_level_window.title("Изображение собачек")
+
+notebook = ttk.Notebook(top_level_window)
+notebook.pack(expand=True, fill="both", padx=10, pady=10)
 
 window.mainloop()
